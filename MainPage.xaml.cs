@@ -30,15 +30,27 @@ public partial class MainPage : ContentPage
 
     }
 
-	private void RemoveBackground()
+	private async void RemoveBackground()
 	{
+        var resultFile = await FilePicker.Default.PickAsync();
+        if (resultFile != null)
+        {
+            if (resultFile.FileName.EndsWith("jpg", StringComparison.OrdinalIgnoreCase) ||
+                resultFile.FileName.EndsWith("png", StringComparison.OrdinalIgnoreCase))
+            {
+                //using var stream = await resultFile.OpenReadAsync();
+                //var image = ImageSource.FromStream(() => stream);
+
+                image1.Source = ImageSource.FromFile(resultFile.FullPath);
+            }
+        }
 
         var serviceOptions = new VisionServiceOptions(
     "https://azureday23cogser.cognitiveservices.azure.com",
     new AzureKeyCredential("76d79cf0f3d849f78718b2e8470c8f80"));
 
-        using var imageSource = VisionSource.FromUrl(
-    new Uri("https://learn.microsoft.com/azure/cognitive-services/computer-vision/media/quickstarts/presentation.png"));
+        using var imageSource = VisionSource.FromFile(
+    resultFile.FullPath);
 
         var analysisOptions = new ImageAnalysisOptions()
         {
@@ -58,13 +70,14 @@ public partial class MainPage : ContentPage
             Console.WriteLine($"   Output image buffer size (bytes) = {imageBuffer.Length}");
             Console.WriteLine($"   Output image height = {segmentationResult.ImageHeight}");
             Console.WriteLine($"   Output image width = {segmentationResult.ImageWidth}");
-
-            string outputImageFile = "output.png";
+            var bytes= imageBuffer.ToArray();
+            image2.Source= ImageSource.FromStream(() => new MemoryStream(bytes));
+            /*string outputImageFile = "output.png";
             using (var fs = new FileStream(outputImageFile, FileMode.Create))
             {
                 fs.Write(imageBuffer.Span);
-            }
-            Console.WriteLine($"   File {outputImageFile} written to disk");
+            }*/
+            //Console.WriteLine($"   File {outputImageFile} written to disk");
         }
         else
         {
