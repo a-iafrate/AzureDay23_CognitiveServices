@@ -8,32 +8,49 @@
             Spacing="25"
             Padding="30,0"
             VerticalOptions="Center">
-            <HorizontalStackLayout>
-            <Image
-                x:Name="image1"
-                Source="dotnet_bot.png"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                HeightRequest="200"
-                HorizontalOptions="Center" />
-                <Image
-                x:Name="image2"
-                Source="dotnet_bot.png"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                HeightRequest="200"
-                HorizontalOptions="Center" />
-            </HorizontalStackLayout>
-            <Label
-                Text="Hello, World!"
-                SemanticProperties.HeadingLevel="Level1"
-                FontSize="32"
-                HorizontalOptions="Center" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition    Width="*"/>
+                    <ColumnDefinition    Width="*"/>
+                    <ColumnDefinition    Width="*"/>
+                    <ColumnDefinition    Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Editor x:Name="editor1"
+                        Grid.Column="0"
+        Placeholder="Enter your response here"
+        HeightRequest="550"
+         />
+                <Picker Grid.Column="1" x:Name="picker" SelectedIndex="0"
+        Title="Select language">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>it</x:String>
+                            <x:String>en</x:String>
+                            
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+                <Picker Grid.Column="2" x:Name="picker2" SelectedIndex="0"
+        Title="Select sentences">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:Int32}">
+                            <x:Int32>3</x:Int32>
+                            <x:Int32>5</x:Int32>
+                            <x:Int32>7</x:Int32>
+                            <x:Int32>10</x:Int32>
+                            <x:Int32>15</x:Int32>
+                            <x:Int32>20</x:Int32>
 
-            <Label
-                Text="Welcome to .NET Multi-platform App UI"
-                SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
-                FontSize="18"
-                HorizontalOptions="Center" />
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+                <Editor x:Name="editor2"
+                        Grid.Column="3"
+        Placeholder="Enter your response here"
+        HeightRequest="550"
+         />
+            </Grid>
+            
 
             <Button
                 x:Name="CounterBtn"
