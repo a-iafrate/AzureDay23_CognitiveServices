@@ -8,7 +8,7 @@
             Spacing="25"
             Padding="30,0"
             VerticalOptions="Center">
-            <HorizontalStackLayout>
+            <HorizontalStackLayout HorizontalOptions="Center">
             <Image
                 x:Name="image1"
                 Source="dotnet_bot.png"
