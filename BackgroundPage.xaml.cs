@@ -49,9 +49,12 @@ public partial class BackgroundPage : ContentPage
         using var imageSource = VisionSource.FromFile(
     resultFile.FullPath);
 
+        ///////// segmentation
         var analysisOptions = new ImageAnalysisOptions()
         {
-            SegmentationMode = ImageSegmentationMode.BackgroundRemoval
+            SegmentationMode = ImageSegmentationMode.BackgroundRemoval,
+            
+           
         };
 
         using var analyzer = new ImageAnalyzer(serviceOptions, imageSource, analysisOptions);
@@ -79,6 +82,39 @@ public partial class BackgroundPage : ContentPage
         else
         {
             var errorDetails = ImageAnalysisErrorDetails.FromResult(result);
+            Console.WriteLine(" Analysis failed.");
+            Console.WriteLine($"   Error reason : {errorDetails.Reason}");
+            Console.WriteLine($"   Error code : {errorDetails.ErrorCode}");
+            Console.WriteLine($"   Error message: {errorDetails.Message}");
+            Console.WriteLine(" Did you set the computer vision endpoint and key?");
+        }
+
+        ///////// text
+        using var imageSourceFeatures = VisionSource.FromFile(
+    resultFile.FullPath);
+        var analysisOptionsFeatures = new ImageAnalysisOptions()
+        {
+            Features = ImageAnalysisFeature.Tags | ImageAnalysisFeature.Caption,
+
+        };
+
+        using var analyzerFeatures = new ImageAnalyzer(serviceOptions, imageSourceFeatures, analysisOptionsFeatures);
+
+        var resultFeatures = analyzerFeatures.Analyze();
+
+        if (resultFeatures.Reason == ImageAnalysisResultReason.Analyzed)
+        {
+            title.Text = resultFeatures.Caption.Content;
+            tags.Text = "";
+            foreach (var tag in resultFeatures.Tags)
+            {
+                tags.Text += tag.Confidence.ToString("F3")+" - " + tag.Name +"\r\n";
+            }
+            
+        }
+        else
+        {
+            var errorDetails = ImageAnalysisErrorDetails.FromResult(resultFeatures);
             Console.WriteLine(" Analysis failed.");
             Console.WriteLine($"   Error reason : {errorDetails.Reason}");
             Console.WriteLine($"   Error code : {errorDetails.ErrorCode}");
