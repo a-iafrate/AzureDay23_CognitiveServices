@@ -6,6 +6,9 @@ using Azure.AI.Vision.Common.Input;
 
 using Azure.AI.TextAnalytics;
 using System.Net;
+using Azure.Core;
+using System.Text.Json;
+using Azure.AI.Language.Conversations;
 
 namespace AzureDay23_CognitiveServices;
 
@@ -23,6 +26,7 @@ public partial class TextPage : ContentPage
 		
 
         TextSummarization();
+        ConversationSummarization();
 
     }
 
@@ -43,7 +47,8 @@ public partial class TextPage : ContentPage
 
         TextAnalyticsActions actions = new TextAnalyticsActions()
         {
-            ExtractSummaryActions = new List<ExtractSummaryAction>() { new ExtractSummaryAction(new ExtractSummaryOptions() { 
+            
+            ExtractiveSummarizeActions = new List<ExtractiveSummarizeAction>() { new ExtractiveSummarizeAction(new ExtractiveSummarizeOptions() { 
             MaxSentenceCount=(int)picker2.SelectedItem}) }
         };
 
@@ -63,9 +68,9 @@ public partial class TextPage : ContentPage
         // View operation results.
         await foreach (AnalyzeActionsResult documentsInPage in operation.Value)
         {
-            IReadOnlyCollection<ExtractSummaryActionResult> summaryResults = documentsInPage.ExtractSummaryResults;
+            IReadOnlyCollection<ExtractiveSummarizeActionResult> summaryResults = documentsInPage.ExtractiveSummarizeResults;
 
-            foreach (ExtractSummaryActionResult summaryActionResults in summaryResults)
+            foreach (ExtractiveSummarizeActionResult summaryActionResults in summaryResults)
             {
                 if (summaryActionResults.HasError)
                 {
@@ -75,7 +80,7 @@ public partial class TextPage : ContentPage
                     continue;
                 }
 
-                foreach (ExtractSummaryResult documentResults in summaryActionResults.DocumentsResults)
+                foreach (ExtractiveSummarizeResult documentResults in summaryActionResults.DocumentsResults)
                 {
                     if (documentResults.HasError)
                     {
@@ -89,7 +94,7 @@ public partial class TextPage : ContentPage
                     Console.WriteLine();
 
                     string result = string.Empty;
-                    foreach (SummarySentence sentence in documentResults.Sentences)
+                    foreach (var sentence in documentResults.Sentences)
                     {
                         result += sentence.Text + "\r\n";
                         Console.WriteLine($"  Sentence: {sentence.Text}");
@@ -101,6 +106,115 @@ public partial class TextPage : ContentPage
         }
     }
 
-    
+
+    private async void ConversationSummarization()
+    {
+        //https://portal.azure.com/#create/Microsoft.CognitiveServicesTextAnalytics
+
+        AzureKeyCredential credentials = new AzureKeyCredential("9a12a08ba613461ba4ca2b1e3c9d0c60");
+        Uri endpoint = new Uri("https://azureday23text.cognitiveservices.azure.com/");
+        var client = new ConversationAnalysisClient(endpoint, credentials);
+
+        var data = new
+        {
+            analysisInput = new
+            {
+                conversations = new[]
+            {
+            new
+            {
+                conversationItems = new[]
+                {
+                    new
+                    {
+                        text = "Hello, you’re chatting with Rene. How may I help you?",
+                        id = "1",
+                        participantId = "Agent",
+                    },
+                    new
+                    {
+                        text = "Hi, I tried to set up wifi connection for Smart Brew 300 coffee machine, but it didn’t work.",
+                        id = "2",
+                        participantId = "Customer",
+                    },
+                    new
+                    {
+                        text = "I’m sorry to hear that. Let’s see what we can do to fix this issue. Could you please try the following steps for me? First, could you push the wifi connection button, hold for 3 seconds, then let me know if the power light is slowly blinking on and off every second?",
+                        id = "3",
+                        participantId = "Agent",
+                    },
+                    new
+                    {
+                        text = "Yes, I pushed the wifi connection button, and now the power light is slowly blinking?",
+                        id = "4",
+                        participantId = "Customer",
+                    },
+                    new
+                    {
+                        text = "Great. Thank you! Now, please check in your Contoso Coffee app. Does it prompt to ask you to connect with the machine?",
+                        id = "5",
+                        participantId = "Agent",
+                    },
+                    new
+                    {
+                        text = "No. Nothing happened.",
+                        id = "6",
+                        participantId = "Customer",
+                    },
+                    new
+                    {
+                        text = "I’m very sorry to hear that. Let me see if there’s another way to fix the issue. Please hold on for a minute.",
+                        id = "7",
+                        participantId = "Agent",
+                    }
+                },
+                id = "1",
+                language = "en",
+                modality = "text",
+            },
+        }
+            },
+            tasks = new[]
+        {
+        new
+        {
+            parameters = new
+            {
+                summaryAspects = new[]
+                {
+                    "issue",
+                    "resolution",
+                }
+            },
+            kind = "ConversationalSummarizationTask",
+            taskName = "1",
+        },
+    },
+        };
+
+        Operation<BinaryData> analyzeConversationOperation = client.AnalyzeConversations(WaitUntil.Started, RequestContent.Create(data));
+        analyzeConversationOperation.WaitForCompletion();
+
+        using JsonDocument result = JsonDocument.Parse(analyzeConversationOperation.Value.ToStream());
+        JsonElement jobResults = result.RootElement;
+        foreach (JsonElement task in jobResults.GetProperty("tasks").GetProperty("items").EnumerateArray())
+        {
+            JsonElement results = task.GetProperty("results");
+
+            Console.WriteLine("Conversations:");
+            foreach (JsonElement conversation in results.GetProperty("conversations").EnumerateArray())
+            {
+                Console.WriteLine($"Conversation: #{conversation.GetProperty("id").GetString()}");
+                Console.WriteLine("Summaries:");
+                foreach (JsonElement summary in conversation.GetProperty("summaries").EnumerateArray())
+                {
+                    Console.WriteLine($"Text: {summary.GetProperty("text").GetString()}");
+                    Console.WriteLine($"Aspect: {summary.GetProperty("aspect").GetString()}");
+                }
+                Console.WriteLine();
+            }
+        }
+    }
 }
+
 
