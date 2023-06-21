@@ -23,13 +23,13 @@
                 HorizontalOptions="Center" />
             </HorizontalStackLayout>
             <Label
-                Text="Hello, World!"
+                Text="Title" x:Name="title"
                 SemanticProperties.HeadingLevel="Level1"
                 FontSize="32"
                 HorizontalOptions="Center" />
 
             <Label
-                Text="Welcome to .NET Multi-platform App UI"
+                Text="Tags" x:Name="tags"
                 SemanticProperties.HeadingLevel="Level2"
                 SemanticProperties.Description="Welcome to dot net Multi platform App U I"
                 FontSize="18"
