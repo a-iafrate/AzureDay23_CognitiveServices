@@ -12,7 +12,7 @@
             <local:BackgroundPage Title="Remove Background" />
         </x:Arguments>
     </NavigationPage>
-    <NavigationPage Title="Title" >
+    <NavigationPage Title="Text Summarize" >
         <x:Arguments>
             <local:TextPage Title="Text Summarize" />
         </x:Arguments>
