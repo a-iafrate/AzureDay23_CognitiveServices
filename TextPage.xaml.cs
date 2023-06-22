@@ -19,6 +19,8 @@ public partial class TextPage : ContentPage
 	public TextPage()
 	{
 		InitializeComponent();
+        picker.SelectedIndex = 0;
+        picker2.SelectedIndex = 0;
 	}
 
 	private void OnCounterClicked(object sender, EventArgs e)
@@ -26,6 +28,15 @@ public partial class TextPage : ContentPage
 		
 
         TextSummarization();
+        
+
+    }
+
+    private void OnCounterClicked2(object sender, EventArgs e)
+    {
+
+
+        
         ConversationSummarization();
 
     }
@@ -111,8 +122,8 @@ public partial class TextPage : ContentPage
     {
         //https://portal.azure.com/#create/Microsoft.CognitiveServicesTextAnalytics
 
-        AzureKeyCredential credentials = new AzureKeyCredential("9a12a08ba613461ba4ca2b1e3c9d0c60");
-        Uri endpoint = new Uri("https://azureday23text.cognitiveservices.azure.com/");
+        AzureKeyCredential credentials = new AzureKeyCredential("9f445925ccab44e3baf6fd84c25faa16");
+        Uri endpoint = new Uri("https://azureday23cogserus.cognitiveservices.azure.com/");
         var client = new ConversationAnalysisClient(endpoint, credentials);
 
         var data = new
@@ -129,43 +140,43 @@ public partial class TextPage : ContentPage
                     {
                         text = "Hello, you’re chatting with Rene. How may I help you?",
                         id = "1",
-                        participantId = "Agent",
+                        role = "Agent",
                     },
                     new
                     {
                         text = "Hi, I tried to set up wifi connection for Smart Brew 300 coffee machine, but it didn’t work.",
                         id = "2",
-                        participantId = "Customer",
+                        role = "Customer",
                     },
                     new
                     {
                         text = "I’m sorry to hear that. Let’s see what we can do to fix this issue. Could you please try the following steps for me? First, could you push the wifi connection button, hold for 3 seconds, then let me know if the power light is slowly blinking on and off every second?",
                         id = "3",
-                        participantId = "Agent",
+                        role = "Agent",
                     },
                     new
                     {
                         text = "Yes, I pushed the wifi connection button, and now the power light is slowly blinking?",
                         id = "4",
-                        participantId = "Customer",
+                        role = "Customer",
                     },
                     new
                     {
                         text = "Great. Thank you! Now, please check in your Contoso Coffee app. Does it prompt to ask you to connect with the machine?",
                         id = "5",
-                        participantId = "Agent",
+                        role = "Agent",
                     },
                     new
                     {
                         text = "No. Nothing happened.",
                         id = "6",
-                        participantId = "Customer",
+                        role = "Customer",
                     },
                     new
                     {
                         text = "I’m very sorry to hear that. Let me see if there’s another way to fix the issue. Please hold on for a minute.",
                         id = "7",
-                        participantId = "Agent",
+                        role = "Agent",
                     }
                 },
                 id = "1",
@@ -201,18 +212,20 @@ public partial class TextPage : ContentPage
         {
             JsonElement results = task.GetProperty("results");
 
-            Console.WriteLine("Conversations:");
+            string text = ("Conversations:\r\n");
             foreach (JsonElement conversation in results.GetProperty("conversations").EnumerateArray())
             {
-                Console.WriteLine($"Conversation: #{conversation.GetProperty("id").GetString()}");
-                Console.WriteLine("Summaries:");
+                
+                text+=($"Conversation: #{conversation.GetProperty("id").GetString()}\r\n");
+                text += ("Summaries:\r\n");
                 foreach (JsonElement summary in conversation.GetProperty("summaries").EnumerateArray())
                 {
-                    Console.WriteLine($"Text: {summary.GetProperty("text").GetString()}");
-                    Console.WriteLine($"Aspect: {summary.GetProperty("aspect").GetString()}");
+                    text += ($"Text: {summary.GetProperty("text").GetString()} - ");
+                    text += ($"Aspect: {summary.GetProperty("aspect").GetString()}\r\n");
                 }
-                Console.WriteLine();
+                
             }
+            editorConversation.Text = text;
         }
     }
 }

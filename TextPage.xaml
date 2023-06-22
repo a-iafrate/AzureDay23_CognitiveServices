@@ -14,15 +14,13 @@
                     <ColumnDefinition    Width="*"/>
                     <ColumnDefinition    Width="*"/>
                     <ColumnDefinition    Width="*"/>
+                    <ColumnDefinition    Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Editor x:Name="editor1"
                         Grid.Column="0"
         Placeholder="Enter your response here"
-        HeightRequest="550" Text="The extractive summarization feature uses natural language processing techniques to locate key sentences in an unstructured text document. 
-                These sentences collectively convey the main idea of the document. This feature is provided as an API for developers. 
-                They can use it to build intelligent solutions based on the relevant information extracted to support various use cases. 
-                Extractive summarization supports several languages. It is based on pretrained multilingual transformer models, part of our quest for holistic representations. 
-                It draws its strength from transfer learning across monolingual and harness the shared nature of languages to produce models of improved quality and efficiency."
+                        FontSize="18"
+        HeightRequest="550" Text="In un villaggio viveva un pastorello che, ogni giorno, portava le pecore a pascolare. Poiché si annoiava molto, decise di fare uno scherzo agli abitanti del villaggio. «Al lupo, al lupo!» cominciò a gridare. I contadini del villaggio accorsero con forconi e randelli, ma una volta nel prato non videro nessuno. Il pastorello, rideva a crepapelle: «Era uno scherzo, e ci siete cascati tutti!» Il giorno dopo ripeté lo scherzo: i contadini arrivarono di corsa al prato ma si accorsero che si trattava di un altro scherzo del pastorello, che si era preso gioco di loro per la seconda volta. Un giorno, all’improvviso, arrivò un intero branco di lupi. Il pastorello cominciò a gridare: «Al lupo, al lupo!» I contadini, però, pensarono che si trattasse del solito scherzo e rimasero al loro posto. Così, i lupi fecero strage di pecore e agnelli senza che nessuno li disturbasse."
          />
                 <Picker Grid.Column="1" x:Name="picker" SelectedIndex="0"
         Title="Select language">
@@ -50,18 +48,34 @@
                 </Picker>
                 <Editor x:Name="editor2"
                         Grid.Column="3"
-        Placeholder="Enter your response here"
+                        Text="Text"
+        IsReadOnly="True"
+                        FontSize="18"
         HeightRequest="550"
          />
+                <Editor x:Name="editorConversation"
+                        Text="Conversation"
+                Grid.Column="4"
+IsReadOnly="True"
+                FontSize="18"
+HeightRequest="550"
+ />
             </Grid>
             
 
             <Button
                 x:Name="CounterBtn"
-                Text="Summarize"
-                SemanticProperties.Hint="Counts the number of times you click"
+                Text="Summarize text"
+                
                 Clicked="OnCounterClicked"
                 HorizontalOptions="Center" />
+
+            <Button
+    x:Name="CounterBtn2"
+    Text="Summarize conversation"
+    
+    Clicked="OnCounterClicked2"
+    HorizontalOptions="Center" />
 
         </VerticalStackLayout>
     </ScrollView>
