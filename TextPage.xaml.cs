@@ -14,29 +14,23 @@ namespace AzureDay23_CognitiveServices;
 
 public partial class TextPage : ContentPage
 {
-	int count = 0;
+    int count = 0;
 
-	public TextPage()
-	{
-		InitializeComponent();
+    public TextPage()
+    {
+        InitializeComponent();
         picker.SelectedIndex = 0;
         picker2.SelectedIndex = 0;
-	}
-
-	private void OnCounterClicked(object sender, EventArgs e)
-	{
-		
-
-        TextSummarization();
-        
-
     }
 
-    private void OnCounterClicked2(object sender, EventArgs e)
+    private void OnTextClicked(object sender, EventArgs e)
+    {
+        TextSummarization();
+    }
+
+    private void OnConversationClicked(object sender, EventArgs e)
     {
 
-
-        
         ConversationSummarization();
 
     }
@@ -45,10 +39,10 @@ public partial class TextPage : ContentPage
     {
         //https://portal.azure.com/#create/Microsoft.CognitiveServicesTextAnalytics
 
-       AzureKeyCredential credentials = new AzureKeyCredential("9a12a08ba613461ba4ca2b1e3c9d0c60");
+        AzureKeyCredential credentials = new AzureKeyCredential("9a12a08ba613461ba4ca2b1e3c9d0c60");
         Uri endpoint = new Uri("https://azureday23text.cognitiveservices.azure.com/");
-    var client = new TextAnalyticsClient(endpoint, credentials);
-        
+        var client = new TextAnalyticsClient(endpoint, credentials);
+
         // Prepare analyze operation input. You can add multiple documents to this list and perform the same
         // operation to all of them.
         var batchInput = new List<string>
@@ -58,13 +52,13 @@ public partial class TextPage : ContentPage
 
         TextAnalyticsActions actions = new TextAnalyticsActions()
         {
-            
-            ExtractiveSummarizeActions = new List<ExtractiveSummarizeAction>() { new ExtractiveSummarizeAction(new ExtractiveSummarizeOptions() { 
+
+            ExtractiveSummarizeActions = new List<ExtractiveSummarizeAction>() { new ExtractiveSummarizeAction(new ExtractiveSummarizeOptions() {
             MaxSentenceCount=(int)picker2.SelectedItem}) }
         };
 
         // Start analysis process.
-        AnalyzeActionsOperation operation = await client.StartAnalyzeActionsAsync(batchInput, actions,(string)picker.SelectedItem);
+        AnalyzeActionsOperation operation = await client.StartAnalyzeActionsAsync(batchInput, actions, (string)picker.SelectedItem);
         await operation.WaitForCompletionAsync();
         // View operation status.
         Console.WriteLine($"AnalyzeActions operation has completed");
@@ -215,15 +209,15 @@ public partial class TextPage : ContentPage
             string text = ("Conversations:\r\n");
             foreach (JsonElement conversation in results.GetProperty("conversations").EnumerateArray())
             {
-                
-                text+=($"Conversation: #{conversation.GetProperty("id").GetString()}\r\n");
+
+                text += ($"Conversation: #{conversation.GetProperty("id").GetString()}\r\n");
                 text += ("Summaries:\r\n");
                 foreach (JsonElement summary in conversation.GetProperty("summaries").EnumerateArray())
                 {
                     text += ($"Text: {summary.GetProperty("text").GetString()} - ");
                     text += ($"Aspect: {summary.GetProperty("aspect").GetString()}\r\n");
                 }
-                
+
             }
             editorConversation.Text = text;
         }

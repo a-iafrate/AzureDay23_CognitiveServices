@@ -10,11 +10,11 @@
             VerticalOptions="Center">
             <Grid>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition    Width="2*"/>
                     <ColumnDefinition    Width="*"/>
                     <ColumnDefinition    Width="*"/>
-                    <ColumnDefinition    Width="*"/>
-                    <ColumnDefinition    Width="*"/>
-                    <ColumnDefinition    Width="*"/>
+                    <ColumnDefinition    Width="2*"/>
+                    <ColumnDefinition    Width="2*"/>
                 </Grid.ColumnDefinitions>
                 <Editor x:Name="editor1"
                         Grid.Column="0"
@@ -67,14 +67,14 @@ HeightRequest="550"
                 x:Name="CounterBtn"
                 Text="Summarize text"
                 
-                Clicked="OnCounterClicked"
+                Clicked="OnTextClicked"
                 HorizontalOptions="Center" />
 
             <Button
     x:Name="CounterBtn2"
     Text="Summarize conversation"
     
-    Clicked="OnCounterClicked2"
+    Clicked="OnConversationClicked"
     HorizontalOptions="Center" />
 
         </VerticalStackLayout>

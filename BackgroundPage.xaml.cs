@@ -11,24 +11,24 @@ namespace AzureDay23_CognitiveServices;
 
 public partial class BackgroundPage : ContentPage
 {
-	int count = 0;
+    int count = 0;
 
-	public BackgroundPage()
-	{
-		InitializeComponent();
-	}
+    public BackgroundPage()
+    {
+        InitializeComponent();
+    }
 
-	private void OnCounterClicked(object sender, EventArgs e)
-	{
-		
+    private void OnCounterClicked(object sender, EventArgs e)
+    {
+
         RemoveBackground();
 
     }
 
-    
+
 
     private async void RemoveBackground()
-	{
+    {
         var resultFile = await FilePicker.Default.PickAsync();
         if (resultFile != null)
         {
@@ -40,6 +40,10 @@ public partial class BackgroundPage : ContentPage
 
                 image1.Source = ImageSource.FromFile(resultFile.FullPath);
             }
+        }
+        else
+        {
+            return;
         }
 
         var serviceOptions = new VisionServiceOptions(
@@ -53,8 +57,8 @@ public partial class BackgroundPage : ContentPage
         var analysisOptions = new ImageAnalysisOptions()
         {
             SegmentationMode = ImageSegmentationMode.BackgroundRemoval,
-            
-           
+
+
         };
 
         using var analyzer = new ImageAnalyzer(serviceOptions, imageSource, analysisOptions);
@@ -70,8 +74,8 @@ public partial class BackgroundPage : ContentPage
             Console.WriteLine($"   Output image buffer size (bytes) = {imageBuffer.Length}");
             Console.WriteLine($"   Output image height = {segmentationResult.ImageHeight}");
             Console.WriteLine($"   Output image width = {segmentationResult.ImageWidth}");
-            var bytes= imageBuffer.ToArray();
-            image2.Source= ImageSource.FromStream(() => new MemoryStream(bytes));
+            var bytes = imageBuffer.ToArray();
+            image2.Source = ImageSource.FromStream(() => new MemoryStream(bytes));
             /*string outputImageFile = "output.png";
             using (var fs = new FileStream(outputImageFile, FileMode.Create))
             {
@@ -108,9 +112,9 @@ public partial class BackgroundPage : ContentPage
             tags.Text = "";
             foreach (var tag in resultFeatures.Tags)
             {
-                tags.Text += tag.Confidence.ToString("F3")+" - " + tag.Name +"\r\n";
+                tags.Text += tag.Confidence.ToString("F3") + " - " + tag.Name + "\r\n";
             }
-            
+
         }
         else
         {

@@ -7,17 +7,17 @@
             xmlns:local="clr-namespace:AzureDay23_CognitiveServices"
            >
     
-    <NavigationPage Title="Remove Background" >
-        <x:Arguments>
-            <local:BackgroundPage Title="Remove Background" />
-        </x:Arguments>
-    </NavigationPage>
+    
     <NavigationPage Title="Text Summarize" >
         <x:Arguments>
             <local:TextPage Title="Text Summarize" />
         </x:Arguments>
     </NavigationPage>
-
+    <NavigationPage Title="Remove Background" >
+        <x:Arguments>
+            <local:BackgroundPage Title="Remove Background" />
+        </x:Arguments>
+    </NavigationPage>
 </TabbedPage>
 
     
