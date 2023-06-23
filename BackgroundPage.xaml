@@ -12,13 +12,11 @@
             <Image
                 x:Name="image1"
                 Source="dotnet_bot.png"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
                 HeightRequest="500"
                 HorizontalOptions="Center" />
                 <Image
                 x:Name="image2"
                 Source="dotnet_bot.png"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
                 HeightRequest="500"
                 HorizontalOptions="Center" />
             </HorizontalStackLayout>
@@ -31,14 +29,12 @@
             <Label
                 Text="Tags" x:Name="tags"
                 SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
                 FontSize="18"
                 HorizontalOptions="Center" />
 
             <Button
                 x:Name="CounterBtn"
                 Text="Remove"
-                SemanticProperties.Hint="Counts the number of times you click"
                 Clicked="OnCounterClicked"
                 HorizontalOptions="Center" />
 
